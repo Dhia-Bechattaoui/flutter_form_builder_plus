@@ -1,0 +1,67 @@
+name: flutter_form_builder_plus
+description: An enhanced form builder with validation, conditional fields, and dynamic form generation for Flutter applications.
+version: 0.0.1
+homepage: https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus
+repository: https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus
+issue_tracker: https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus/issues
+documentation: https://pub.dev/documentation/flutter_form_builder_plus
+
+funding:
+  - https://github.com/sponsors/Dhia-Bechattaoui
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_form_builder: ^10.0.0
+  form_builder_validators: ^11.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  test: ^1.0.0
+  mockito: ^5.0.0
+  build_runner: ^2.0.0
+  json_annotation: ^4.0.0
+  json_serializable: ^6.0.0
+  freezed_annotation: ^3.0.0
+  freezed: ^3.0.0
+  coverage: ^1.0.0
+
+flutter:
+  # No assets needed for this package
+
+# Pana analysis configuration
+pana:
+  # Enable all analysis features
+  dart_analyzer:
+    exclude:
+      - "**/*.g.dart"
+      - "**/*.freezed.dart"
+  # Documentation configuration
+  documentation:
+    # Ensure all public APIs are documented
+    require_documentation: true
+  # Test configuration
+  test:
+    # Ensure tests exist and pass
+    require_tests: true
+    # Ensure test coverage is adequate
+    require_coverage: true
+    coverage_threshold: 80
+  # Example configuration
+  example:
+    # Ensure example app exists and works
+    require_example: true
+  # Platform support
+  platforms:
+    android: true
+    ios: true
+    web: true
+    windows: true
+    macos: true
+    linux: true
