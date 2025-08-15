@@ -56,8 +56,8 @@ class ConditionalFormField {
       final value = rule['value'];
       final action = rule['action'] as String;
 
-      // Only process rules that affect this field
-      if (targetField != fieldName) continue;
+      // Check if this rule affects the current field's visibility
+      if (action != 'show' && action != 'hide') continue;
 
       final fieldValue = formData[targetField];
       bool conditionMet = false;
@@ -99,10 +99,6 @@ class ConditionalFormField {
             return true;
           case 'hide':
             return false;
-          case 'enable':
-          case 'disable':
-            // These actions don't affect visibility
-            break;
         }
       }
     }
@@ -122,8 +118,8 @@ class ConditionalFormField {
       final value = rule['value'];
       final action = rule['action'] as String;
 
-      // Only process rules that affect this field
-      if (targetField != fieldName) continue;
+      // Check if this rule affects the current field's enabled state
+      if (action != 'enable' && action != 'disable') continue;
 
       final fieldValue = formData[targetField];
       bool conditionMet = false;
@@ -165,10 +161,6 @@ class ConditionalFormField {
             return true;
           case 'disable':
             return false;
-          case 'show':
-          case 'hide':
-            // These actions don't affect enabled state
-            break;
         }
       }
     }
