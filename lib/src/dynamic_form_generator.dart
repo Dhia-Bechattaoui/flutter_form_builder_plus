@@ -447,7 +447,9 @@ class DynamicFormGenerator {
           ...choices.map((choice) => RadioListTile<String>(
                 title: Text(choice.toString()),
                 value: choice.toString(),
+                // ignore: deprecated_member_use
                 groupValue: currentValue?.toString(),
+                // ignore: deprecated_member_use
                 onChanged: enabled
                     ? (value) {
                         onChanged(fieldName, value);
@@ -476,6 +478,7 @@ class DynamicFormGenerator {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
+        // ignore: deprecated_member_use
         value: currentValue?.toString(),
         decoration: InputDecoration(
           labelText: label,

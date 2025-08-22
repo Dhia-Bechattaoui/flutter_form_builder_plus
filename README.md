@@ -17,7 +17,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_form_builder_plus: ^0.0.1
+  flutter_form_builder_plus: ^0.0.2
 ```
 
 ## Quick Start

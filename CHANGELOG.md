@@ -8,11 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial package structure
-- Core form builder functionality
-- Validation system
-- Conditional field support
-- Dynamic form generation
 
 ### Changed
 
@@ -23,6 +18,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+## [0.0.2] - 2025-08-22
+
+### Added
+- Enhanced documentation coverage (100% API documentation)
+- Improved test coverage and reliability
+- Better error handling and validation
+- Performance optimizations
+
+### Changed
+- Updated dependencies to latest stable versions
+- Improved code formatting and linting
+- Enhanced example application
+
+### Fixed
+- Minor bug fixes and improvements
+- Code quality improvements
 
 ## [0.0.1] - 2024-01-01
 
