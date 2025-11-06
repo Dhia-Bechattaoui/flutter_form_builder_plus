@@ -38,10 +38,14 @@ class FormUtils {
       case 'lowercase':
         return value.toString().toLowerCase();
       case 'capitalize':
-        return value.toString().split(' ').map((word) {
-          if (word.isEmpty) return word;
-          return word[0].toUpperCase() + word.substring(1).toLowerCase();
-        }).join(' ');
+        return value
+            .toString()
+            .split(' ')
+            .map((word) {
+              if (word.isEmpty) return word;
+              return word[0].toUpperCase() + word.substring(1).toLowerCase();
+            })
+            .join(' ');
       case 'phone':
         return _formatPhoneNumber(value.toString());
       case 'credit_card':
@@ -122,12 +126,14 @@ class FormUtils {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;
@@ -189,12 +195,14 @@ class FormUtils {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;

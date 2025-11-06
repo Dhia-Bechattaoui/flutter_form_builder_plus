@@ -146,10 +146,7 @@ class FormBuilderPlusUtils {
   /// [config] is the form configuration.
   /// [fieldName] is the name of the field.
   /// Returns true if the field is required, false otherwise.
-  static bool isFieldRequired(
-    Map<String, dynamic> config,
-    String fieldName,
-  ) {
+  static bool isFieldRequired(Map<String, dynamic> config, String fieldName) {
     final fieldConfig = getFieldConfig(config, fieldName);
     if (fieldConfig == null) return false;
 
@@ -161,10 +158,7 @@ class FormBuilderPlusUtils {
   /// [config] is the form configuration.
   /// [fieldName] is the name of the field.
   /// Returns the field type or null if not found.
-  static String? getFieldType(
-    Map<String, dynamic> config,
-    String fieldName,
-  ) {
+  static String? getFieldType(Map<String, dynamic> config, String fieldName) {
     final fieldConfig = getFieldConfig(config, fieldName);
     if (fieldConfig == null) return null;
 
@@ -211,11 +205,7 @@ class FormBuilderPlusUtils {
       'fields': [],
       'validation': {},
       'conditional': {},
-      'options': {
-        'autoValidate': false,
-        'skipDisabled': true,
-        'enabled': true,
-      },
+      'options': {'autoValidate': false, 'skipDisabled': true, 'enabled': true},
     };
   }
 

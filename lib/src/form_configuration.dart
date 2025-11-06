@@ -45,7 +45,8 @@ class FormConfiguration {
   static Map<String, dynamic> fromJson(Map<String, dynamic> json) {
     return {
       'name': json['name'] as String? ?? 'form',
-      'fields': (json['fields'] as List<dynamic>?)
+      'fields':
+          (json['fields'] as List<dynamic>?)
               ?.map((field) => field as Map<String, dynamic>)
               .toList() ??
           [],

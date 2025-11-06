@@ -49,6 +49,7 @@
 /// ## Additional Information
 ///
 /// For more information, see the [documentation](https://pub.dev/documentation/flutter_form_builder_plus).
+// ignore: unnecessary_library_name
 library flutter_form_builder_plus;
 
 // Core exports
@@ -60,10 +61,10 @@ export 'src/dynamic_form_generator.dart';
 export 'src/validation/validators.dart';
 export 'src/models/form_field_config.dart';
 export 'src/models/conditional_rule.dart';
-export 'src/models/form_state.dart'; // Exports FormBuilderPlusState
+export 'src/models/form_state.dart'; // Exports FormBuilderPlusState and FormState (alias)
 
 // Widget exports
-export 'src/widgets/form_builder_plus.dart';
+export 'src/widgets/form_builder_plus.dart' hide FormBuilderPlusState;
 export 'src/widgets/conditional_form_field.dart';
 export 'src/widgets/dynamic_form.dart';
 

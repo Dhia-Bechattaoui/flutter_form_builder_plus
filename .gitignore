@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -71,3 +73,18 @@ docs/_build/
 .vscode/settings.json
 .vscode/launch.json
 .vscode/tasks.json
+
+# Pub.dev publishing
+pubspec.lock
+
+# macOS additional
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~

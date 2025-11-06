@@ -39,8 +39,11 @@ class ValidationUtils {
   /// [minLength] is the minimum required length.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? minLength(String? value, int minLength,
-      [String? errorMessage]) {
+  static String? minLength(
+    String? value,
+    int minLength, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (value.length < minLength) {
@@ -55,8 +58,11 @@ class ValidationUtils {
   /// [maxLength] is the maximum allowed length.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? maxLength(String? value, int maxLength,
-      [String? errorMessage]) {
+  static String? maxLength(
+    String? value,
+    int maxLength, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (value.length > maxLength) {
@@ -71,8 +77,11 @@ class ValidationUtils {
   /// [pattern] is the regular expression pattern to match.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? pattern(String? value, RegExp pattern,
-      [String? errorMessage]) {
+  static String? pattern(
+    String? value,
+    RegExp pattern, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (!pattern.hasMatch(value)) {
@@ -174,8 +183,12 @@ class ValidationUtils {
   /// [max] is the maximum allowed value.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? range(String? value, num min, num max,
-      [String? errorMessage]) {
+  static String? range(
+    String? value,
+    num min,
+    num max, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     final numValue = double.tryParse(value);
@@ -294,8 +307,11 @@ class ValidationUtils {
   /// [otherValue] is the value to match against.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? match(String? value, dynamic otherValue,
-      [String? errorMessage]) {
+  static String? match(
+    String? value,
+    dynamic otherValue, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (value != otherValue.toString()) {
@@ -310,8 +326,11 @@ class ValidationUtils {
   /// [otherValue] is the value to compare against.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? notEqual(String? value, dynamic otherValue,
-      [String? errorMessage]) {
+  static String? notEqual(
+    String? value,
+    dynamic otherValue, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (value == otherValue.toString()) {
@@ -326,8 +345,11 @@ class ValidationUtils {
   /// [allowedValues] is the list of allowed values.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? inList(String? value, List<dynamic> allowedValues,
-      [String? errorMessage]) {
+  static String? inList(
+    String? value,
+    List<dynamic> allowedValues, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (!allowedValues.contains(value)) {
@@ -343,8 +365,11 @@ class ValidationUtils {
   /// [forbiddenValues] is the list of forbidden values.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? notInList(String? value, List<dynamic> forbiddenValues,
-      [String? errorMessage]) {
+  static String? notInList(
+    String? value,
+    List<dynamic> forbiddenValues, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     if (forbiddenValues.contains(value)) {
@@ -375,8 +400,11 @@ class ValidationUtils {
   /// [countryCode] is the country code for postal code validation.
   /// [errorMessage] is the error message to return if validation fails.
   /// Returns null if valid, error message if invalid.
-  static String? postalCode(String? value, String countryCode,
-      [String? errorMessage]) {
+  static String? postalCode(
+    String? value,
+    String countryCode, [
+    String? errorMessage,
+  ]) {
     if (value == null || value.isEmpty) return null;
 
     final patterns = {
@@ -488,7 +516,9 @@ class ValidationUtils {
   /// [validators] is the list of validation functions.
   /// Returns the first error message found, or null if all validations pass.
   static String? combine(
-      String? value, List<String? Function(String?)> validators) {
+    String? value,
+    List<String? Function(String?)> validators,
+  ) {
     for (final validator in validators) {
       final result = validator(value);
       if (result != null) {

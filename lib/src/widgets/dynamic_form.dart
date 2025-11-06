@@ -25,15 +25,16 @@ class DynamicForm {
     Function(Map<String, dynamic>)? onFormSubmitted,
     VoidCallback? onFormReset,
   }) {
-    // final formName = config['name'] as String? ?? 'dynamic_form'; // TODO: Use for form identification
+    final formName = config['name'] as String? ?? 'dynamic_form';
     final fields = config['fields'] as List<dynamic>? ?? [];
     final options = config['options'] as Map<String, dynamic>? ?? {};
 
     final autoValidate = options['autoValidate'] as bool? ?? false;
-    // final skipDisabled = options['skipDisabled'] as bool? ?? true; // TODO: Use for validation skipping
+    final skipDisabled = options['skipDisabled'] as bool? ?? true;
     final enabled = options['enabled'] as bool? ?? true;
 
     return Form(
+      key: Key(formName), // Use form name for form identification
       autovalidateMode: autoValidate
           ? AutovalidateMode.onUserInteraction
           : AutovalidateMode.disabled,
@@ -47,12 +48,16 @@ class DynamicForm {
 
             // Check if field should be visible
             if (!_shouldFieldBeVisible(
-                fieldConfig, conditionalRules, formData)) {
+              fieldConfig,
+              conditionalRules,
+              formData,
+            )) {
               return const SizedBox.shrink();
             }
 
             // Check if field should be enabled
-            final isEnabled = enabled &&
+            final isEnabled =
+                enabled &&
                 _shouldFieldBeEnabled(fieldConfig, conditionalRules, formData);
 
             // Create the field widget
@@ -63,7 +68,7 @@ class DynamicForm {
               onFieldChanged: onFieldChanged,
               onFieldValidated: onFieldValidated,
             );
-          }).toList(),
+          }),
 
           // Form buttons
           const SizedBox(height: 20),
@@ -74,7 +79,11 @@ class DynamicForm {
                   onPressed: enabled
                       ? () {
                           // Validate and submit form
-                          final errors = _validateForm(fields, formData);
+                          final errors = _validateForm(
+                            fields,
+                            formData,
+                            skipDisabled: skipDisabled,
+                          );
                           if (errors.isEmpty) {
                             onFormSubmitted?.call(formData);
                           }
@@ -132,12 +141,14 @@ class DynamicForm {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;
@@ -195,12 +206,14 @@ class DynamicForm {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;
@@ -346,15 +359,22 @@ class DynamicForm {
   /// Validates the form data against field configurations.
   static Map<String, String?> _validateForm(
     List<dynamic> fields,
-    Map<String, dynamic> formData,
-  ) {
+    Map<String, dynamic> formData, {
+    bool skipDisabled = true,
+  }) {
     final errors = <String, String?>{};
 
     for (final field in fields) {
       final fieldConfig = field as Map<String, dynamic>;
       final fieldName = fieldConfig['name'] as String;
       final required = fieldConfig['required'] as bool? ?? false;
+      final fieldEnabled = fieldConfig['enabled'] as bool? ?? true;
       final fieldValue = formData[fieldName];
+
+      // Skip validation for disabled fields if skipDisabled is true
+      if (skipDisabled && !fieldEnabled) {
+        continue;
+      }
 
       if (required && (fieldValue == null || fieldValue.toString().isEmpty)) {
         errors[fieldName] = 'This field is required';
@@ -604,18 +624,20 @@ class DynamicForm {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (label != null) Text(label),
-          ...choices.map((choice) => RadioListTile<String>(
-                title: Text(choice.toString()),
-                value: choice.toString(),
-                // ignore: deprecated_member_use
-                groupValue: currentValue?.toString(),
-                // ignore: deprecated_member_use
-                onChanged: enabled
-                    ? (value) {
-                        onChanged(fieldName, value);
-                      }
-                    : null,
-              )),
+          ...choices.map(
+            (choice) => RadioListTile<String>(
+              title: Text(choice.toString()),
+              value: choice.toString(),
+              // ignore: deprecated_member_use
+              groupValue: currentValue?.toString(),
+              // ignore: deprecated_member_use
+              onChanged: enabled
+                  ? (value) {
+                      onChanged(fieldName, value);
+                    }
+                  : null,
+            ),
+          ),
         ],
       ),
     );
@@ -645,10 +667,12 @@ class DynamicForm {
           border: const OutlineInputBorder(),
         ),
         items: choices
-            .map((choice) => DropdownMenuItem<String>(
-                  value: choice.toString(),
-                  child: Text(choice.toString()),
-                ))
+            .map(
+              (choice) => DropdownMenuItem<String>(
+                value: choice.toString(),
+                child: Text(choice.toString()),
+              ),
+            )
             .toList(),
         onChanged: enabled
             ? (value) {

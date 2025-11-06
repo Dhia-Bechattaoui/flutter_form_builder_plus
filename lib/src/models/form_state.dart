@@ -42,14 +42,20 @@ class FormBuilderPlusState {
   factory FormBuilderPlusState.fromJson(Map<String, dynamic> json) {
     return FormBuilderPlusState(
       data: (json['data'] as Map<String, dynamic>?) ?? {},
-      errors: (json['errors'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(key, value as String?)) ??
+      errors:
+          (json['errors'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(key, value as String?),
+          ) ??
           {},
-      visibleFields: (json['visibleFields'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(key, value as bool)) ??
+      visibleFields:
+          (json['visibleFields'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(key, value as bool),
+          ) ??
           {},
-      enabledFields: (json['enabledFields'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(key, value as bool)) ??
+      enabledFields:
+          (json['enabledFields'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(key, value as bool),
+          ) ??
           {},
       isValid: json['isValid'] as bool? ?? true,
       isSubmitting: json['isSubmitting'] as bool? ?? false,
@@ -182,6 +188,6 @@ class FormBuilderPlusState {
 
   @override
   String toString() {
-    return 'FormState(data: $data, errors: $errors, visibleFields: $visibleFields, enabledFields: $enabledFields, isValid: $isValid, isSubmitting: $isSubmitting)';
+    return 'FormBuilderPlusState(data: $data, errors: $errors, visibleFields: $visibleFields, enabledFields: $enabledFields, isValid: $isValid, isSubmitting: $isSubmitting)';
   }
 }

@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   flutter_form_builder_plus:
     path: ../
+  flutter_form_builder: ^10.0.0
+  form_builder_validators: ^11.0.0
 
 dev_dependencies:
   flutter_test:

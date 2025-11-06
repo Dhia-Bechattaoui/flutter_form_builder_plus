@@ -2,6 +2,35 @@
 
 An enhanced form builder with validation, conditional fields, and dynamic form generation for Flutter applications.
 
+## Demo
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus/raw/main/assets/basic.gif" width="300" alt="Basic Form Demo">
+      <br>
+      <strong>Basic Form</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus/raw/main/assets/conditional.gif" width="300" alt="Conditional Fields Demo">
+      <br>
+      <strong>Conditional Fields</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus/raw/main/assets/validators.gif" width="300" alt="Enhanced Validators Demo">
+      <br>
+      <strong>Enhanced Validators</strong>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="3">
+      <img src="https://github.com/Dhia-Bechattaoui/flutter_form_builder_plus/raw/main/assets/all.gif" width="300" alt="All Field Types Demo">
+      <br>
+      <strong>All Field Types</strong>
+    </td>
+  </tr>
+</table>
+
 ## Features
 
 - **Enhanced Form Building**: Extends `flutter_form_builder` with additional functionality
@@ -27,6 +56,8 @@ dependencies:
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder_plus/flutter_form_builder_plus.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class MyForm extends StatefulWidget {
   @override
@@ -34,13 +65,12 @@ class MyForm extends StatefulWidget {
 }
 
 class _MyFormState extends State<MyForm> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormBuilderState>();
   final _formData = <String, dynamic>{};
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderPlus(
-      key: _formKey,
       child: Column(
         children: [
           FormBuilderTextField(
@@ -302,8 +332,8 @@ FormBuilderPlusValidators.strongPassword()
 Track form state including data, errors, and field visibility:
 
 ```dart
-class FormState {
-  const FormState({
+class FormBuilderPlusState {
+  const FormBuilderPlusState({
     this.data = const {},
     this.errors = const {},
     this.visibleFields = const {},

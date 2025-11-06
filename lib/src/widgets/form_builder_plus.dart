@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 /// Enhanced form builder widget with validation, conditional fields, and dynamic form generation.
 ///
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 class FormBuilderPlus extends StatefulWidget {
   /// Creates a new FormBuilderPlus widget.
   ///
-  /// [name] is the unique identifier for the form.
+  /// [name] is the unique identifier for the form (optional, defaults to 'form_builder_plus').
   /// [child] is the widget tree that contains the form fields.
   /// [initialValue] is the initial form data.
   /// [onChanged] is called when the form data changes.
@@ -20,7 +21,7 @@ class FormBuilderPlus extends StatefulWidget {
   /// [child] is the widget tree that contains the form fields.
   const FormBuilderPlus({
     super.key,
-    required this.name,
+    this.name,
     required this.child,
     this.initialValue,
     this.onChanged,
@@ -32,7 +33,7 @@ class FormBuilderPlus extends StatefulWidget {
   });
 
   /// The unique identifier for the form.
-  final String name;
+  final String? name;
 
   /// The widget tree that contains the form fields.
   final Widget child;
@@ -59,13 +60,13 @@ class FormBuilderPlus extends StatefulWidget {
   final bool enabled;
 
   @override
-  State<FormBuilderPlus> createState() => _FormBuilderPlusState();
+  State<FormBuilderPlus> createState() => FormBuilderPlusState();
 }
 
-class _FormBuilderPlusState extends State<FormBuilderPlus> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class FormBuilderPlusState extends State<FormBuilderPlus> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _formData = {};
-  Map<String, String?> _errors = {};
+  final Map<String, String?> _errors = {};
   bool _isValid = true;
 
   @override
@@ -76,15 +77,32 @@ class _FormBuilderPlusState extends State<FormBuilderPlus> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return FormBuilder(
       key: _formKey,
+      initialValue: widget.initialValue ?? {},
       autovalidateMode: widget.autovalidateMode,
+      skipDisabled: widget.skipDisabled,
+      enabled: widget.enabled,
+      onChanged: () {
+        if (_formKey.currentState != null) {
+          _formData = _formKey.currentState!.value;
+          widget.onChanged?.call(_formData);
+        }
+      },
       child: widget.child,
     );
   }
 
+  /// Gets the underlying FormBuilder key for direct access.
+  GlobalKey<FormBuilderState> get formKey => _formKey;
+
   /// Gets the current form data.
-  Map<String, dynamic> get formData => _formData;
+  Map<String, dynamic> get formData {
+    if (_formKey.currentState != null) {
+      _formData = _formKey.currentState!.value;
+    }
+    return _formData;
+  }
 
   /// Gets the current form errors.
   Map<String, String?> get errors => _errors;
@@ -94,16 +112,28 @@ class _FormBuilderPlusState extends State<FormBuilderPlus> {
 
   /// Updates a field value in the form.
   void updateField(String fieldName, dynamic value) {
+    _formKey.currentState?.fields[fieldName]?.didChange(value);
     setState(() {
-      _formData[fieldName] = value;
+      if (_formKey.currentState != null) {
+        _formData = _formKey.currentState!.value;
+      } else {
+        _formData[fieldName] = value;
+      }
     });
     widget.onChanged?.call(_formData);
   }
 
   /// Updates multiple field values in the form.
   void updateFields(Map<String, dynamic> updates) {
+    for (final entry in updates.entries) {
+      _formKey.currentState?.fields[entry.key]?.didChange(entry.value);
+    }
     setState(() {
-      _formData.addAll(updates);
+      if (_formKey.currentState != null) {
+        _formData = _formKey.currentState!.value;
+      } else {
+        _formData.addAll(updates);
+      }
     });
     widget.onChanged?.call(_formData);
   }
@@ -133,28 +163,56 @@ class _FormBuilderPlusState extends State<FormBuilderPlus> {
     final isValid = _formKey.currentState?.validate() ?? false;
     setState(() {
       _isValid = isValid;
+      if (_formKey.currentState != null) {
+        _formData = _formKey.currentState!.value;
+      }
     });
+    return isValid;
+  }
+
+  /// Saves and validates the form.
+  bool saveAndValidate() {
+    final isValid = _formKey.currentState?.saveAndValidate() ?? false;
+    setState(() {
+      _isValid = isValid;
+      if (_formKey.currentState != null) {
+        _formData = _formKey.currentState!.value;
+      }
+    });
+    if (isValid) {
+      widget.onSaved?.call(_formData);
+    }
     return isValid;
   }
 
   /// Saves the form.
   void save() {
     _formKey.currentState?.save();
+    if (_formKey.currentState != null) {
+      _formData = _formKey.currentState!.value;
+    }
     widget.onSaved?.call(_formData);
   }
 
   /// Resets the form to its initial state.
   void reset() {
+    _formKey.currentState?.reset();
     setState(() {
-      _formData = Map<String, dynamic>.from(widget.initialValue ?? {});
+      if (_formKey.currentState != null) {
+        _formData = _formKey.currentState!.value;
+      } else {
+        _formData = Map<String, dynamic>.from(widget.initialValue ?? {});
+      }
       _errors.clear();
       _isValid = true;
     });
-    _formKey.currentState?.reset();
   }
 
   /// Gets the value of a field.
   dynamic getFieldValue(String fieldName) {
+    if (_formKey.currentState != null) {
+      _formData = _formKey.currentState!.value;
+    }
     return _formData[fieldName];
   }
 
@@ -180,8 +238,8 @@ class _FormBuilderPlusState extends State<FormBuilderPlus> {
 /// Extension to provide FormBuilderPlus functionality to BuildContext.
 extension FormBuilderPlusExtension on BuildContext {
   /// Gets the FormBuilderPlus state from the widget tree.
-  _FormBuilderPlusState? get formBuilderPlus {
-    final widget = findAncestorStateOfType<_FormBuilderPlusState>();
+  FormBuilderPlusState? get formBuilderPlus {
+    final widget = findAncestorStateOfType<FormBuilderPlusState>();
     return widget;
   }
 
@@ -217,6 +275,11 @@ extension FormBuilderPlusExtension on BuildContext {
   /// Validates the form.
   bool? validateForm() {
     return formBuilderPlus?.validate();
+  }
+
+  /// Saves and validates the form.
+  bool? saveAndValidateForm() {
+    return formBuilderPlus?.saveAndValidate();
   }
 
   /// Saves the form.

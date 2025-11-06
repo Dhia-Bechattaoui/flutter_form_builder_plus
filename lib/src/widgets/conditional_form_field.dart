@@ -31,8 +31,11 @@ class ConditionalFormField {
     }
 
     // Check if field should be enabled
-    final isEnabled =
-        _shouldFieldBeEnabled(fieldName, conditionalRules, formData);
+    final isEnabled = _shouldFieldBeEnabled(
+      fieldName,
+      conditionalRules,
+      formData,
+    );
 
     // Create the field widget
     return _createFieldWidget(
@@ -50,6 +53,13 @@ class ConditionalFormField {
     List<Map<String, dynamic>> conditionalRules,
     Map<String, dynamic> formData,
   ) {
+    if (conditionalRules.isEmpty) {
+      return true; // No rules means always visible
+    }
+
+    bool hasShowRule = false;
+    bool hasHideRule = false;
+
     for (final rule in conditionalRules) {
       final targetField = rule['fieldName'] as String;
       final operator = rule['operator'] as String;
@@ -59,12 +69,26 @@ class ConditionalFormField {
       // Check if this rule affects the current field's visibility
       if (action != 'show' && action != 'hide') continue;
 
+      if (action == 'show') hasShowRule = true;
+      if (action == 'hide') hasHideRule = true;
+
       final fieldValue = formData[targetField];
       bool conditionMet = false;
 
       switch (operator) {
         case 'equals':
-          conditionMet = fieldValue == value;
+          // Handle bool comparison - checkbox might be null when unchecked
+          if (value is bool) {
+            if (value == true) {
+              // Checking for true: fieldValue must be exactly true (not null or false)
+              conditionMet = fieldValue == true;
+            } else {
+              // Checking for false: fieldValue can be false or null
+              conditionMet = fieldValue == false || fieldValue == null;
+            }
+          } else {
+            conditionMet = fieldValue == value;
+          }
           break;
         case 'not_equals':
           conditionMet = fieldValue != value;
@@ -78,12 +102,14 @@ class ConditionalFormField {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;
@@ -96,14 +122,23 @@ class ConditionalFormField {
       if (conditionMet) {
         switch (action) {
           case 'show':
-            return true;
+            return true; // Condition met, show the field
           case 'hide':
-            return false;
+            return false; // Condition met, hide the field
         }
       }
     }
 
-    return true; // Default to visible
+    // If we have show rules but none were met, hide the field
+    // If we have hide rules but none were met, show the field
+    if (hasShowRule) {
+      return false; // Show rule exists but condition not met, so hide
+    }
+    if (hasHideRule) {
+      return true; // Hide rule exists but condition not met, so show
+    }
+
+    return true; // Default to visible if no visibility rules
   }
 
   /// Determines if a field should be enabled based on conditional rules.
@@ -140,12 +175,14 @@ class ConditionalFormField {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;
@@ -528,18 +565,20 @@ class ConditionalFormField {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (label != null) Text(label),
-          ...choices.map((choice) => RadioListTile<String>(
-                title: Text(choice.toString()),
-                value: choice.toString(),
-                // ignore: deprecated_member_use
-                groupValue: currentValue?.toString(),
-                // ignore: deprecated_member_use
-                onChanged: enabled
-                    ? (value) {
-                        onChanged(fieldName, value);
-                      }
-                    : null,
-              )),
+          ...choices.map(
+            (choice) => RadioListTile<String>(
+              title: Text(choice.toString()),
+              value: choice.toString(),
+              // ignore: deprecated_member_use
+              groupValue: currentValue?.toString(),
+              // ignore: deprecated_member_use
+              onChanged: enabled
+                  ? (value) {
+                      onChanged(fieldName, value);
+                    }
+                  : null,
+            ),
+          ),
         ],
       ),
     );
@@ -569,10 +608,12 @@ class ConditionalFormField {
           border: const OutlineInputBorder(),
         ),
         items: choices
-            .map((choice) => DropdownMenuItem<String>(
-                  value: choice.toString(),
-                  child: Text(choice.toString()),
-                ))
+            .map(
+              (choice) => DropdownMenuItem<String>(
+                value: choice.toString(),
+                child: Text(choice.toString()),
+              ),
+            )
             .toList(),
         onChanged: enabled
             ? (value) {

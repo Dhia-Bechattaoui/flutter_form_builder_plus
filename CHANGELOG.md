@@ -19,6 +19,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.1.0] - 2025-11-06
+
+### Added
+- GitHub Actions CI workflow for automated testing and building
+- Demo GIFs in README showcasing basic forms, conditional fields, validators, and all field types
+- Package topics for better discoverability on pub.dev (form, validation, flutter, widgets, dynamic-forms)
+- Enhanced .gitignore following pub.dev best practices
+
+### Changed
+- Updated Dart SDK requirement to >=3.8.0
+- Updated Flutter SDK requirement to >=3.32.0
+- Increased test coverage threshold from 80% to 90%
+- Added explicit platform declarations in pubspec.yaml (Android, iOS, Web, Windows, macOS, Linux)
+
+### Fixed
+- Resolved ambiguous export for FormBuilderPlusState
+- Fixed library directive linting issues
+- Improved code quality and linting compliance
+
 ## [0.0.2] - 2025-08-22
 
 ### Added

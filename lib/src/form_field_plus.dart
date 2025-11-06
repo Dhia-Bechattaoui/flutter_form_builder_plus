@@ -566,8 +566,9 @@ class FormFieldPlus {
     Map<String, dynamic> rule,
   ) {
     final updatedConfig = Map<String, dynamic>.from(config);
-    final rules =
-        List<Map<String, dynamic>>.from(getFieldConditionalRules(config));
+    final rules = List<Map<String, dynamic>>.from(
+      getFieldConditionalRules(config),
+    );
     rules.add(rule);
     updatedConfig['conditionalRules'] = rules;
     return updatedConfig;
@@ -583,8 +584,9 @@ class FormFieldPlus {
     Map<String, dynamic> rule,
   ) {
     final updatedConfig = Map<String, dynamic>.from(config);
-    final rules =
-        List<Map<String, dynamic>>.from(getFieldConditionalRules(config));
+    final rules = List<Map<String, dynamic>>.from(
+      getFieldConditionalRules(config),
+    );
     rules.removeWhere((r) => mapEquals(r, rule));
     updatedConfig['conditionalRules'] = rules;
     return updatedConfig;

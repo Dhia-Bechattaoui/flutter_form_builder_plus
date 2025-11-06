@@ -34,12 +34,18 @@ class DynamicFormGenerator {
       final placeholder = config['placeholder'] as String?;
       final required = config['required'] as bool? ?? false;
       final enabled = config['enabled'] as bool? ?? true;
-      // final visible = config['visible'] as bool? ?? true; // TODO: Use this for conditional visibility
+      final visible = config['visible'] as bool? ?? true;
       final validators = config['validators'] as List<dynamic>? ?? [];
       final conditionalRules =
           config['conditionalRules'] as List<dynamic>? ?? [];
       final options = config['options'] as Map<String, dynamic>? ?? {};
       final defaultValue = config['defaultValue'];
+
+      // Check if field should be visible based on static visible flag and conditional rules
+      // First check the static visible flag, then apply conditional rules
+      if (!visible) {
+        continue; // Field is statically hidden
+      }
 
       // Check if field should be visible based on conditional rules
       if (!_shouldFieldBeVisible(fieldName, conditionalRules, formData)) {
@@ -47,7 +53,8 @@ class DynamicFormGenerator {
       }
 
       // Check if field should be enabled based on conditional rules
-      final isEnabled = enabled &&
+      final isEnabled =
+          enabled &&
           _shouldFieldBeEnabled(fieldName, conditionalRules, formData);
 
       // Generate the field widget
@@ -444,18 +451,20 @@ class DynamicFormGenerator {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (label != null) Text(label),
-          ...choices.map((choice) => RadioListTile<String>(
-                title: Text(choice.toString()),
-                value: choice.toString(),
-                // ignore: deprecated_member_use
-                groupValue: currentValue?.toString(),
-                // ignore: deprecated_member_use
-                onChanged: enabled
-                    ? (value) {
-                        onChanged(fieldName, value);
-                      }
-                    : null,
-              )),
+          ...choices.map(
+            (choice) => RadioListTile<String>(
+              title: Text(choice.toString()),
+              value: choice.toString(),
+              // ignore: deprecated_member_use
+              groupValue: currentValue?.toString(),
+              // ignore: deprecated_member_use
+              onChanged: enabled
+                  ? (value) {
+                      onChanged(fieldName, value);
+                    }
+                  : null,
+            ),
+          ),
         ],
       ),
     );
@@ -485,10 +494,12 @@ class DynamicFormGenerator {
           border: const OutlineInputBorder(),
         ),
         items: choices
-            .map((choice) => DropdownMenuItem<String>(
-                  value: choice.toString(),
-                  child: Text(choice.toString()),
-                ))
+            .map(
+              (choice) => DropdownMenuItem<String>(
+                value: choice.toString(),
+                child: Text(choice.toString()),
+              ),
+            )
             .toList(),
         onChanged: enabled
             ? (value) {
@@ -587,12 +598,14 @@ class DynamicFormGenerator {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;
@@ -649,12 +662,14 @@ class DynamicFormGenerator {
               !(fieldValue?.toString().contains(value.toString()) ?? false);
           break;
         case 'greater_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue > value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue > value
+              : false;
           break;
         case 'less_than':
-          conditionMet =
-              (fieldValue is num && value is num) ? fieldValue < value : false;
+          conditionMet = (fieldValue is num && value is num)
+              ? fieldValue < value
+              : false;
           break;
         case 'is_empty':
           conditionMet = fieldValue == null || fieldValue.toString().isEmpty;

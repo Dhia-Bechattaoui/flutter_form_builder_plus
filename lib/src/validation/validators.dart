@@ -94,10 +94,7 @@ class FormBuilderPlusValidators {
   ///
   /// [min] is the minimum allowed value.
   /// [errorText] is the error message to display if validation fails.
-  static FormFieldValidator<String> minValue(
-    num min, [
-    String? errorText,
-  ]) {
+  static FormFieldValidator<String> minValue(num min, [String? errorText]) {
     return (value) {
       if (value == null || value.isEmpty) return null;
       final numValue = num.tryParse(value);
@@ -115,10 +112,7 @@ class FormBuilderPlusValidators {
   ///
   /// [max] is the maximum allowed value.
   /// [errorText] is the error message to display if validation fails.
-  static FormFieldValidator<String> maxValue(
-    num max, [
-    String? errorText,
-  ]) {
+  static FormFieldValidator<String> maxValue(num max, [String? errorText]) {
     return (value) {
       if (value == null || value.isEmpty) return null;
       final numValue = num.tryParse(value);
@@ -161,8 +155,10 @@ class FormBuilderPlusValidators {
       final patterns = {
         'US': RegExp(r'^\d{5}(-\d{4})?$'),
         'CA': RegExp(r'^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$'),
-        'UK':
-            RegExp(r'^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$', caseSensitive: false),
+        'UK': RegExp(
+          r'^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$',
+          caseSensitive: false,
+        ),
         'DE': RegExp(r'^\d{5}$'),
         'FR': RegExp(r'^\d{5}$'),
         'IT': RegExp(r'^\d{5}$'),
@@ -223,10 +219,7 @@ class FormBuilderPlusValidators {
   ///
   /// [format] is the expected date format (default: 'yyyy-MM-dd').
   /// [errorText] is the error message to display if validation fails.
-  static FormFieldValidator<String> date(
-    String format, [
-    String? errorText,
-  ]) {
+  static FormFieldValidator<String> date(String format, [String? errorText]) {
     return (value) {
       if (value == null || value.isEmpty) return null;
       try {
@@ -267,10 +260,7 @@ class FormBuilderPlusValidators {
   ///
   /// [format] is the expected time format (default: 'HH:mm').
   /// [errorText] is the error message to display if validation fails.
-  static FormFieldValidator<String> time(
-    String format, [
-    String? errorText,
-  ]) {
+  static FormFieldValidator<String> time(String format, [String? errorText]) {
     return (value) {
       if (value == null || value.isEmpty) return null;
       try {

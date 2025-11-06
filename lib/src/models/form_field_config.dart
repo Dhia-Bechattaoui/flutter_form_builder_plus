@@ -78,9 +78,12 @@ class FormFieldConfig {
       label: json['label'] as String?,
       placeholder: json['placeholder'] as String?,
       validators: (json['validators'] as List<dynamic>?)?.cast<String>() ?? [],
-      conditionalRules: (json['conditionalRules'] as List<dynamic>?)
-              ?.map((rule) =>
-                  ConditionalRule.fromJson(rule as Map<String, dynamic>))
+      conditionalRules:
+          (json['conditionalRules'] as List<dynamic>?)
+              ?.map(
+                (rule) =>
+                    ConditionalRule.fromJson(rule as Map<String, dynamic>),
+              )
               .toList() ??
           [],
       options: (json['options'] as Map<String, dynamic>?) ?? {},
@@ -100,8 +103,9 @@ class FormFieldConfig {
       'label': label,
       'placeholder': placeholder,
       'validators': validators,
-      'conditionalRules':
-          conditionalRules.map((rule) => rule.toJson()).toList(),
+      'conditionalRules': conditionalRules
+          .map((rule) => rule.toJson())
+          .toList(),
       'options': options,
       'defaultValue': defaultValue,
       'required': required,

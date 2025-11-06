@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test:
+    name: Test on Flutter ${{ matrix.flutter }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flutter: ['3.10.0', 'stable']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.flutter }}
+          channel: ${{ matrix.flutter == 'stable' && 'stable' || 'any' }}
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Get example dependencies
+        run: |
+          cd example
+          flutter pub get
+
+      - name: Verify formatting
+        run: dart format --set-exit-if-changed .
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Upload coverage
+        if: matrix.flutter == 'stable'
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage/lcov.info
+          fail_ci_if_error: false
+
+  build:
+    name: Build example app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Get example dependencies
+        run: |
+          cd example
+          flutter pub get
+
+      - name: Build example (Android)
+        run: |
+          cd example
+          flutter build apk --debug
+
+      - name: Build example (Web)
+        run: |
+          cd example
+          flutter build web --release
+
+  lint:
+    name: Lint and format check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --set-exit-if-changed .
+
+      - name: Run analyzer
+        run: flutter analyze --fatal-infos --fatal-warnings
+
