@@ -34,12 +34,18 @@ jobs:
         run: |
           OUTPUT=$(dart pub global run pana --no-warning --source path . 2>&1)
           echo "$OUTPUT"
-          SCORE=$(echo "$OUTPUT" | grep -oP 'Pana score: \K\d+' || echo "0")
+          # Extract score from "Points: 160/160" format
+          SCORE=$(echo "$OUTPUT" | grep -oP 'Points: \K\d+' | head -1 || echo "0")
+          if [ -z "$SCORE" ] || [ "$SCORE" = "0" ]; then
+            # Fallback: try to extract from "Pana score:" if available
+            SCORE=$(echo "$OUTPUT" | grep -oP 'Pana score: \K\d+' | head -1 || echo "0")
+          fi
           echo "Pana score: $SCORE"
           if [ "$SCORE" -lt 160 ]; then
             echo "::error::Pana score is below 160 (current: $SCORE)"
             exit 1
           fi
+          echo "✓ Pana score check passed: $SCORE/160"
       
       - name: Verify package (dry publish)
         run: flutter pub publish --dry-run

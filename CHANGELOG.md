@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized pana workflow to run analysis only once instead of twice
 - Improved error reporting in pana workflow with GitHub Actions annotations
 - Fixed missing web and linux platform files in example app (resolves "Missing index.html" CI error)
+- Fixed pana score extraction in CI workflow to correctly parse score from "Points:" format
 
 ## [0.0.2] - 2025-08-22
 
