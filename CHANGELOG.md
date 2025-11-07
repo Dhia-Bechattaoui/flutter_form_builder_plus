@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Demo GIFs in README showcasing basic forms, conditional fields, validators, and all field types
 - Package topics for better discoverability on pub.dev (form, validation, flutter, widgets, dynamic-forms)
 - Enhanced .gitignore following pub.dev best practices
+- Created .pubignore file to exclude build artifacts, IDE files, and pubspec.lock from package publishing
 
 ### Changed
 - Updated Dart SDK requirement to >=3.8.0
@@ -52,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error reporting in pana workflow with GitHub Actions annotations
 - Fixed missing web and linux platform files in example app (resolves "Missing index.html" CI error)
 - Fixed pana score extraction in CI workflow to correctly parse score from "Points:" format
+- Fixed pub.dev publishing validation issues by removing pubspec.lock files from git tracking
+- Excluded build artifacts and IDE files from package publishing to reduce package size
 
 ## [0.0.2] - 2025-08-22
 

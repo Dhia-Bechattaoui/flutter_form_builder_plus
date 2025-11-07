@@ -1,0 +1,17 @@
+# Exclude pubspec.lock files from publishing
+pubspec.lock
+**/pubspec.lock
+
+# Exclude build artifacts
+build/
+**/build/
+
+# Exclude IDE files
+*.iml
+.idea/
+.vscode/
+
+# Exclude generated files
+*.g.dart
+*.freezed.dart
+
