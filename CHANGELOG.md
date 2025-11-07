@@ -32,11 +32,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Flutter SDK requirement to >=3.32.0
 - Increased test coverage threshold from 80% to 90%
 - Added explicit platform declarations in pubspec.yaml (Android, iOS, Web, Windows, macOS, Linux)
+- Updated CI workflow to use Flutter 3.32.0 (matching minimum SDK requirement) instead of 3.10.0
+- Pinned `subosito/flutter-action` to v2.13.0 for consistent behavior
 
 ### Fixed
 - Resolved ambiguous export for FormBuilderPlusState
 - Fixed library directive linting issues
 - Improved code quality and linting compliance
+- Fixed CI workflow cancellation issues by adding timeout configurations to all jobs
+- Improved CI reliability by using pinned action versions
 
 ## [0.0.2] - 2025-08-22
 
