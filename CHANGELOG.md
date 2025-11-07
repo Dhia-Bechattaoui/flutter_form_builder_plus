@@ -47,6 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved code quality and linting compliance
 - Fixed CI workflow cancellation issues by adding timeout configurations to all jobs
 - Improved CI reliability by using pinned action versions
+- Removed redundant `dart analyze` step in CI workflow (flutter analyze already includes it)
+- Added permissions configuration to all GitHub Actions workflows for better security
+- Optimized pana workflow to run analysis only once instead of twice
+- Improved error reporting in pana workflow with GitHub Actions annotations
 
 ## [0.0.2] - 2025-08-22
 

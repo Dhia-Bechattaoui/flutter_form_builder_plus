@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   analyze:
     name: Analyze & Lint
@@ -28,9 +32,6 @@ jobs:
       
       - name: Analyze code
         run: flutter analyze --no-fatal-infos
-      
-      - name: Dart analyze
-        run: dart analyze
 
   test:
     name: Test
@@ -75,15 +76,15 @@ jobs:
           flutter pub get
           cd example && flutter pub get
       
-      - name: Build example (Linux)
-        run: |
-          cd example
-          flutter build linux --release
-      
       - name: Build example (Web)
         run: |
           cd example
           flutter build web --release
+      
+      - name: Build example (Linux)
+        run: |
+          cd example
+          flutter build linux --release
 
   platform-tests:
     name: Platform Tests
