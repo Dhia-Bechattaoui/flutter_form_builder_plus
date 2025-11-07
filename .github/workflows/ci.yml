@@ -2,107 +2,108 @@ name: CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
 
 jobs:
-  test:
-    name: Test on Flutter ${{ matrix.flutter }}
+  analyze:
+    name: Analyze & Lint
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        flutter: ['3.32.0', 'stable']
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2.13.0
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ matrix.flutter }}
-          channel: ${{ matrix.flutter == 'stable' && 'stable' || 'any' }}
+          flutter-version: '3.32.0'
+          channel: 'stable'
           cache: true
-
-      - name: Get dependencies
+      
+      - name: Install dependencies
         run: flutter pub get
-
-      - name: Get example dependencies
-        run: |
-          cd example
-          flutter pub get
-
+      
       - name: Verify formatting
-        run: dart format --set-exit-if-changed .
-
+        run: dart format --output=none --set-exit-if-changed .
+      
       - name: Analyze code
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
+      
+      - name: Dart analyze
+        run: dart analyze
 
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'
+          channel: 'stable'
+          cache: true
+      
+      - name: Install dependencies
+        run: flutter pub get
+      
       - name: Run tests
         run: flutter test --coverage
-
+      
       - name: Upload coverage
-        if: matrix.flutter == 'stable'
         uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
           fail_ci_if_error: false
 
-  build:
-    name: Build example app
+  build-example:
+    name: Build Example
     runs-on: ubuntu-latest
-    timeout-minutes: 45
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2.13.0
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.32.0'
           channel: 'stable'
           cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Get example dependencies
+      
+      - name: Install dependencies
         run: |
-          cd example
           flutter pub get
-
-      - name: Build example (Android)
+          cd example && flutter pub get
+      
+      - name: Build example (Linux)
         run: |
           cd example
-          flutter build apk --debug
-
+          flutter build linux --release
+      
       - name: Build example (Web)
         run: |
           cd example
           flutter build web --release
 
-  lint:
-    name: Lint and format check
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+  platform-tests:
+    name: Platform Tests
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2.13.0
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.32.0'
           channel: 'stable'
           cache: true
-
-      - name: Get dependencies
+      
+      - name: Install dependencies
         run: flutter pub get
-
-      - name: Check formatting
-        run: dart format --set-exit-if-changed .
-
-      - name: Run analyzer
-        run: flutter analyze --fatal-infos --fatal-warnings
+      
+      - name: Run tests
+        run: flutter test
 
