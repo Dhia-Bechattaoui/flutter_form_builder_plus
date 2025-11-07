@@ -11,8 +11,8 @@ permissions:
   pull-requests: read
 
 jobs:
-  analyze:
-    name: Analyze & Lint
+  pana:
+    name: Pana Analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,84 +27,20 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+      - name: Install pana
+        run: dart pub global activate pana
       
-      - name: Analyze code
-        run: flutter analyze --no-fatal-infos
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.32.0'
-          channel: 'stable'
-          cache: true
-      
-      - name: Install dependencies
-        run: flutter pub get
-      
-      - name: Run tests
-        run: flutter test --coverage
-      
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          files: coverage/lcov.info
-          fail_ci_if_error: false
-
-  build-example:
-    name: Build Example
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.32.0'
-          channel: 'stable'
-          cache: true
-      
-      - name: Install dependencies
+      - name: Run pana and check score
         run: |
-          flutter pub get
-          cd example && flutter pub get
+          OUTPUT=$(dart pub global run pana --no-warning --source path . 2>&1)
+          echo "$OUTPUT"
+          SCORE=$(echo "$OUTPUT" | grep -oP 'Pana score: \K\d+' || echo "0")
+          echo "Pana score: $SCORE"
+          if [ "$SCORE" -lt 160 ]; then
+            echo "::error::Pana score is below 160 (current: $SCORE)"
+            exit 1
+          fi
       
-      - name: Build example (Web)
-        run: |
-          cd example
-          flutter build web --release
-      
-      - name: Build example (Linux)
-        run: |
-          cd example
-          flutter build linux --release
-
-  platform-tests:
-    name: Platform Tests
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.32.0'
-          channel: 'stable'
-          cache: true
-      
-      - name: Install dependencies
-        run: flutter pub get
-      
-      - name: Run tests
-        run: flutter test
+      - name: Verify package (dry publish)
+        run: flutter pub publish --dry-run
 

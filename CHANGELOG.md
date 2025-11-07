@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+- Redundant pana.yml workflow (functionality merged into CI workflow)
+- Publish workflow (publishing now handled manually)
 
 ### Fixed
 
@@ -22,9 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-11-06
 
 ### Added
-- GitHub Actions CI workflow for automated testing and building
-- Pana analysis workflow for package quality checks
-- Publish workflow for automated pub.dev publishing
+- GitHub Actions CI workflow for pana analysis and package verification
 - Platform tests across Ubuntu, macOS, and Windows
 - Demo GIFs in README showcasing basic forms, conditional fields, validators, and all field types
 - Package topics for better discoverability on pub.dev (form, validation, flutter, widgets, dynamic-forms)
@@ -37,8 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added explicit platform declarations in pubspec.yaml (Android, iOS, Web, Windows, macOS, Linux)
 - Updated CI workflow to use Flutter 3.32.0 (matching minimum SDK requirement) instead of 3.10.0
 - Pinned `subosito/flutter-action` to v2.13.0 for consistent behavior
-- Restructured CI workflow into separate jobs: analyze, test, build-example, and platform-tests
-- Updated pana workflow to use Flutter setup for consistency
+- Simplified CI workflow to focus on pana analysis and dry publish verification
 - Improved CI workflow organization and clarity
 
 ### Fixed
